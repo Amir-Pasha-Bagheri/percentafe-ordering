@@ -1,14 +1,21 @@
 import Coin from './Coin';
 import usePagination from 'utils/usePagination';
 import StyledPagination from './StyledPagination';
-import { useIRTCoins } from 'config/store';
+import { useIRTCoins, useIRTPage, useIRTSetPage } from 'config/store';
 
 function IRTcoins() {
   const coins = useIRTCoins();
-  const { data, pageCount, page, changePage } = usePagination({ data: coins, countPerPage: 10 });
+  const IRTpage = useIRTPage();
+  const IRTsetPage = useIRTSetPage();
 
-  const onChange = (_: unknown, newPage: number) => {
-    changePage(newPage);
+  const { data, pageCount } = usePagination({
+    data: coins,
+    countPerPage: 10,
+    page: IRTpage,
+  });
+
+  const onChangePage = (_: unknown, newPage: number) => {
+    IRTsetPage(newPage);
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -28,8 +35,8 @@ function IRTcoins() {
 
       <StyledPagination
         count={pageCount}
-        page={page}
-        onChange={onChange}
+        page={IRTpage}
+        onChange={onChangePage}
         color="primary"
         variant="outlined"
         shape="circular"

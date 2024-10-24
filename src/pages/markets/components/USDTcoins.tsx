@@ -1,14 +1,21 @@
 import Coin from './Coin';
 import usePagination from 'utils/usePagination';
 import StyledPagination from './StyledPagination';
-import { useUSDTCoins } from 'config/store';
+import { useUSDTCoins, useUSDTPage, useUSDTSetPage } from 'config/store';
 
 function USDTcoins() {
   const coins = useUSDTCoins();
-  const { data, pageCount, page, changePage } = usePagination({ data: coins, countPerPage: 10 });
+  const USDTpage = useUSDTPage();
+  const USDTsetPage = useUSDTSetPage();
 
-  const onChange = (_: unknown, newPage: number) => {
-    changePage(newPage);
+  const { data, pageCount } = usePagination({
+    data: coins,
+    countPerPage: 10,
+    page: USDTpage,
+  });
+
+  const onChangePage = (_: unknown, newPage: number) => {
+    USDTsetPage(newPage);
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -28,8 +35,8 @@ function USDTcoins() {
 
       <StyledPagination
         count={pageCount}
-        page={page}
-        onChange={onChange}
+        page={USDTpage}
+        onChange={onChangePage}
         color="primary"
         variant="outlined"
         shape="circular"

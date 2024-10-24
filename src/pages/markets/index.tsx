@@ -4,8 +4,9 @@ import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 
 import { SwipeCallback, useSwipeable } from 'react-swipeable';
 import TabsFallback from './components/TabsFallback';
 import PendingProvider from './components/PendingProvider';
-import axios from 'axios';
 import { useIRTSetCoins, useUSDTSetCoins } from 'config/store';
+import useSWR from 'swr';
+import fetcher from 'utils/fetcher';
 
 const USDTcoins = lazy(() => import('./components/USDTcoins'));
 const IRTcoins = lazy(() => import('./components/IRTcoins'));
@@ -18,10 +19,13 @@ const StyledTabPanel = styled(TabPanel)(({ theme }) => ({
 function Markets() {
   const [tab, setTab] = useState<'IRT' | 'USDT'>('IRT');
   const [isPending, startTransition] = useTransition();
-  const [isLoading, setIsLoading] = useState(true);
 
   const setIRTCoins = useIRTSetCoins();
   const setUSDTCoins = useUSDTSetCoins();
+
+  const { data, error, isLoading } = useSWR('https://api.bitpin.ir/v1/mkt/markets/', fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const handleChange = (_: unknown, newValue: 'IRT' | 'USDT') => {
     startTransition(() => {
@@ -37,22 +41,17 @@ function Markets() {
     if (tab === 'USDT') handleChange(undefined, 'IRT');
   }, [tab]);
 
-  const handlers = useSwipeable({
+  const swipeHandlers = useSwipeable({
     onSwipedLeft: swipeLeft,
     onSwipedRight: swipeRight,
   });
 
   useEffect(() => {
-    axios
-      .get('https://api.bitpin.ir/v1/mkt/markets/')
-      .then(({ data }) => {
-        setIRTCoins(data.results.filter((result: any) => result.currency2.code === 'IRT'));
-        setUSDTCoins(data.results.filter((result: any) => result.currency2.code === 'USDT'));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [setIRTCoins, setUSDTCoins]);
+    if (data) {
+      setIRTCoins(data.results.filter((result: any) => result.currency2.code === 'IRT'));
+      setUSDTCoins(data.results.filter((result: any) => result.currency2.code === 'USDT'));
+    }
+  }, [setIRTCoins, setUSDTCoins, data]);
 
   if (isLoading)
     return (
@@ -62,10 +61,12 @@ function Markets() {
       </>
     );
 
+  if (error) return <Typography>Something went wrong with server !</Typography>;
+
   return (
     <Container maxWidth="md">
       <TabContext value={tab}>
-        <div {...handlers}>
+        <div {...swipeHandlers}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} variant="fullWidth">
               <Tab

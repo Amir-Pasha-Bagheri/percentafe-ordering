@@ -10,6 +10,8 @@ interface Market {
 interface Store {
   irt: Market;
   usdt: Market;
+  mode: 'dark' | 'light';
+  setMode: (mode: 'dark' | 'light') => void;
 }
 
 const useAppStore = create<Store>((set, get) => ({
@@ -26,12 +28,22 @@ const useAppStore = create<Store>((set, get) => ({
     page: 1,
     setPage: (page) => set({ usdt: { ...get().usdt, page } }),
   },
+
+  mode: (window.localStorage.getItem('mode') as 'dark' | 'light') || 'light',
+  setMode: (mode) => set({ mode }),
 }));
 
 export default useAppStore;
 
 export const useIRTCoins = () => useAppStore((state) => state.irt.coins);
 export const useIRTSetCoins = () => useAppStore((state) => state.irt.setCoins);
+export const useIRTPage = () => useAppStore((state) => state.irt.page);
+export const useIRTSetPage = () => useAppStore((state) => state.irt.setPage);
 
 export const useUSDTCoins = () => useAppStore((state) => state.usdt.coins);
 export const useUSDTSetCoins = () => useAppStore((state) => state.usdt.setCoins);
+export const useUSDTPage = () => useAppStore((state) => state.usdt.page);
+export const useUSDTSetPage = () => useAppStore((state) => state.usdt.setPage);
+
+export const useMode = () => useAppStore((state) => state.mode);
+export const useSetMode = () => useAppStore((state) => state.setMode);
