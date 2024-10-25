@@ -35,7 +35,7 @@ function TransactionList() {
   if (error) return <ServerError />;
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} elevation={2}>
       <Table>
         <TableHead>
           <TableRow>

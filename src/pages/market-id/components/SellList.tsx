@@ -21,11 +21,11 @@ import sumArray from 'utils/sumArray';
 import PercentageInput from './PercentageInput';
 import weightedAverageArray from 'utils/weightedAverageArray';
 
-function BuyList() {
+function SellList() {
   const { market_id } = useParams();
 
   const { data, error, isLoading } = useSWR(
-    `https://api.bitpin.org/v2/mth/actives/${market_id}/?type=buy`,
+    `https://api.bitpin.org/v2/mth/actives/${market_id}/?type=sell`,
     fetcher,
     {
       refreshInterval: 3000,
@@ -86,4 +86,4 @@ function BuyList() {
   );
 }
 
-export default BuyList;
+export default SellList;

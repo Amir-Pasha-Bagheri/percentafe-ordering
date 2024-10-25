@@ -27,9 +27,11 @@ function USDTcoins() {
       {data.map((coin) => (
         <Coin
           key={coin.id}
+          price={coin.price}
           title={coin.title}
           img={coin.currency1.image}
           altImg={coin.currency2.image}
+          marketId={coin.id}
         />
       ))}
 

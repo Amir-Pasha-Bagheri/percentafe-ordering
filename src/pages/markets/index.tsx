@@ -29,18 +29,18 @@ function Markets() {
     revalidateOnFocus: false,
   });
 
-  const handleChange = (_: unknown, newValue: 'IRT' | 'USDT') => {
+  const handleChangeTab = (_: unknown, newValue: 'IRT' | 'USDT') => {
     startTransition(() => {
       setTab(newValue);
     });
   };
 
   const swipeRight: SwipeCallback = useCallback(() => {
-    if (tab === 'IRT') handleChange(undefined, 'USDT');
+    if (tab === 'IRT') handleChangeTab(undefined, 'USDT');
   }, [tab]);
 
   const swipeLeft: SwipeCallback = useCallback(() => {
-    if (tab === 'USDT') handleChange(undefined, 'IRT');
+    if (tab === 'USDT') handleChangeTab(undefined, 'IRT');
   }, [tab]);
 
   const swipeHandlers = useSwipeable({
@@ -63,7 +63,7 @@ function Markets() {
     <TabContext value={tab}>
       <div {...swipeHandlers}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange} variant="fullWidth">
+          <TabList onChange={handleChangeTab} variant="fullWidth">
             <Tab
               label="USDT"
               value="USDT"

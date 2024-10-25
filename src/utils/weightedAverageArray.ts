@@ -10,5 +10,6 @@ export default function weightedAverageArray(
 
   const sumOfWeight = sumArray(array.map((item) => Number(item.remain)));
 
-  return sumWithWeight / sumOfWeight;
+  if (sumOfWeight) return sumWithWeight / sumOfWeight;
+  return 0;
 }

@@ -28,6 +28,7 @@ function IRTcoins() {
         <Coin
           key={coin.id}
           title={coin.title}
+          price={coin.price}
           img={coin.currency1.image}
           altImg={coin.currency2.image}
           marketId={coin.id}

@@ -1,9 +1,11 @@
-import { Avatar, Card, Divider, Grid2, styled, Typography } from '@mui/material';
+import { Avatar, Box, Card, Divider, Grid2, styled, Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import splitNumber from 'utils/splitNumber';
 
 interface CoinProps {
   title: string;
+  price: string;
   img: string;
   altImg: string;
   marketId: string;
@@ -18,7 +20,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     transition: '0.3s',
   },
   ':hover .chevron': {
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
   },
 }));
 
@@ -40,7 +42,13 @@ function Coin(props: CoinProps) {
         />
 
         <Divider orientation="vertical" flexItem sx={{ margin: '0 10px', borderWidth: 1 }} />
-        <Typography>{props.title}</Typography>
+
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography>{props.title}</Typography>
+          <Typography variant="subtitle2" color="primary">
+            $ {splitNumber(props.price)}
+          </Typography>
+        </Box>
 
         <ChevronRight className="chevron" />
       </Grid2>
