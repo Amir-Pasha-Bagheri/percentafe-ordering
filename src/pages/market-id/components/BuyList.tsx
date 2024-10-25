@@ -1,4 +1,5 @@
 import {
+  Divider,
   Paper,
   Table,
   TableBody,
@@ -16,6 +17,8 @@ import averageArray from 'utils/averageArray';
 import fetcher from 'utils/fetcher';
 import splitNumber from 'utils/splitNumber';
 import sumArray from 'utils/sumArray';
+import PercentageInput from './PercentageInput';
+import weightedAverageArray from 'utils/weightedAverageArray';
 
 function BuyList() {
   const { market_id } = useParams();
@@ -35,39 +38,48 @@ function BuyList() {
   if (error) return <ServerError />;
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Price</TableCell>
-            <TableCell align="center">Value</TableCell>
-            <TableCell align="center">Remain</TableCell>
-          </TableRow>
-        </TableHead>
+    <>
+      <PercentageInput
+        totalRemain={sumArray(top10.map((order) => Number(order.remain)))}
+        priceAverage={averageArray(top10.map((order) => Number(order.price)))}
+      />
 
-        <TableBody>
-          {top10.slice(0, 10).map((order, index) => (
-            <TableRow key={index}>
-              <TableCell align="center">{splitNumber(order.price)}</TableCell>
-              <TableCell align="center">{splitNumber(order.value)}</TableCell>
-              <TableCell align="center">{splitNumber(order.remain)}</TableCell>
+      <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Price</TableCell>
+              <TableCell align="center">Value</TableCell>
+              <TableCell align="center">Remain</TableCell>
             </TableRow>
-          ))}
+          </TableHead>
 
-          <TableRow sx={{ fontWeight: 700, fontSize: '30px !important' }}>
-            <TableCell align="center">
-              AVG : {splitNumber(averageArray(top10.map((order) => Number(order.price))))}
-            </TableCell>
-            <TableCell align="center">
-              SUM : {splitNumber(sumArray(top10.map((order) => Number(order.value))))}
-            </TableCell>
-            <TableCell align="center">
-              SUM : {splitNumber(sumArray(top10.map((order) => Number(order.remain))))}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+          <TableBody>
+            {top10.slice(0, 10).map((order, index) => (
+              <TableRow key={index}>
+                <TableCell align="center">{splitNumber(order.price)}</TableCell>
+                <TableCell align="center">{splitNumber(order.value)}</TableCell>
+                <TableCell align="center">{splitNumber(order.remain)}</TableCell>
+              </TableRow>
+            ))}
+
+            <TableRow sx={{ fontWeight: 700, fontSize: '30px !important' }}>
+              <TableCell align="center">
+                W AVG : {splitNumber(weightedAverageArray(top10))}
+              </TableCell>
+              <TableCell align="center">
+                SUM : {splitNumber(sumArray(top10.map((order) => Number(order.value))))}
+              </TableCell>
+              <TableCell align="center">
+                SUM : {splitNumber(sumArray(top10.map((order) => Number(order.remain))))}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 
