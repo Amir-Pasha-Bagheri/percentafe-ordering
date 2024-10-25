@@ -2,6 +2,7 @@ import Coin from './Coin';
 import usePagination from 'utils/usePagination';
 import StyledPagination from './StyledPagination';
 import { useUSDTCoins, useUSDTPage, useUSDTSetPage } from 'config/store';
+import TabsFallback from 'shared-components/loading/TabsFallback';
 
 function USDTcoins() {
   const coins = useUSDTCoins();
@@ -22,29 +23,32 @@ function USDTcoins() {
     });
   };
 
-  return (
-    <>
-      {data.map((coin) => (
-        <Coin
-          key={coin.id}
-          price={coin.price}
-          title={coin.title}
-          img={coin.currency1.image}
-          altImg={coin.currency2.image}
-          marketId={coin.id}
-        />
-      ))}
+  if (data.length)
+    return (
+      <>
+        {data.map((coin) => (
+          <Coin
+            key={coin.id}
+            price={coin.price}
+            title={coin.title}
+            img={coin.currency1.image}
+            altImg={coin.currency2.image}
+            marketId={coin.id}
+          />
+        ))}
 
-      <StyledPagination
-        count={pageCount}
-        page={USDTpage}
-        onChange={onChangePage}
-        color="primary"
-        variant="outlined"
-        shape="circular"
-      />
-    </>
-  );
+        <StyledPagination
+          count={pageCount}
+          page={USDTpage}
+          onChange={onChangePage}
+          color="primary"
+          variant="outlined"
+          shape="circular"
+        />
+      </>
+    );
+
+  return <TabsFallback />;
 }
 
 export default USDTcoins;
