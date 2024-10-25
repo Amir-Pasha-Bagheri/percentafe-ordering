@@ -15,7 +15,8 @@ const IRTcoins = lazy(() => import('./components/IRTcoins'));
 
 const StyledTabPanel = styled(TabPanel)(({ theme }) => ({
   padding: 0,
-  marginTop: theme.spacing(2),
+  transition: '0.3s',
+  marginTop: theme.spacing(1),
 }));
 
 function Markets() {
@@ -43,9 +44,33 @@ function Markets() {
     if (tab === 'USDT') handleChangeTab(undefined, 'IRT');
   }, [tab]);
 
+  const onSwipeStart: SwipeCallback = (event) => {
+    const swipers = document.getElementsByClassName('swiper')! as HTMLCollectionOf<HTMLDivElement>;
+
+    if (event.dir === 'Right')
+      for (const swiper of swipers) {
+        swiper.style.marginLeft = '50px';
+      }
+    if (event.dir === 'Left')
+      for (const swiper of swipers) {
+        swiper.style.marginRight = '50px';
+      }
+  };
+
+  const onSwiped: SwipeCallback = () => {
+    const swipers = document.getElementsByClassName('swiper')! as HTMLCollectionOf<HTMLDivElement>;
+
+    for (const swiper of swipers) {
+      swiper.style.marginRight = '0px';
+      swiper.style.marginLeft = '0px';
+    }
+  };
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: swipeLeft,
     onSwipedRight: swipeRight,
+    onSwipeStart,
+    onSwiped,
   });
 
   useEffect(() => {
@@ -61,7 +86,7 @@ function Markets() {
 
   return (
     <TabContext value={tab}>
-      <div {...swipeHandlers}>
+      <div {...swipeHandlers} id="swiper">
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChangeTab} variant="fullWidth">
             <Tab
@@ -84,13 +109,13 @@ function Markets() {
         </Box>
 
         <Suspense fallback={<TabsFallback />}>
-          <StyledTabPanel value="USDT">
+          <StyledTabPanel value="USDT" className="swiper">
             <PendingProvider isPending={isPending}>
               <USDTcoins />
             </PendingProvider>
           </StyledTabPanel>
 
-          <StyledTabPanel value="IRT">
+          <StyledTabPanel value="IRT" className="swiper">
             <PendingProvider isPending={isPending}>
               <IRTcoins />
             </PendingProvider>

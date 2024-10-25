@@ -1,4 +1,4 @@
-import { Divider, Grid2, InputAdornment, TextField } from '@mui/material';
+import { Divider, FormHelperText, Grid2, InputAdornment, TextField } from '@mui/material';
 import Decimal from 'decimal.js';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import splitNumber from 'utils/splitNumber';
@@ -38,16 +38,9 @@ function PercentageInput(props: PercentageInputProps) {
           },
         }}
       />
+      <FormHelperText>Total Remains: {props.totalRemain}</FormHelperText>
 
       <Grid2 container sx={{ marginTop: 3 }} spacing={3}>
-        <Grid2>Total Remain : {splitNumber(props.totalRemain)}</Grid2>
-
-        <Divider
-          orientation="vertical"
-          flexItem
-          sx={{ display: { xs: 'none', sm: 'block' }, marginLeft: 3, marginRight: 3 }}
-        />
-
         <Grid2>Price Average : {splitNumber(props.priceAverage.toFixed(2))} $</Grid2>
 
         <Divider
@@ -56,7 +49,17 @@ function PercentageInput(props: PercentageInputProps) {
           sx={{ display: { xs: 'none', sm: 'block' }, marginLeft: 3, marginRight: 3 }}
         />
 
-        <Grid2>Payment : {splitNumber(payment)}</Grid2>
+        <Grid2>
+          Amount : {splitNumber(new Decimal(percentage).div(100).mul(props.totalRemain).toString())}
+        </Grid2>
+
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ display: { xs: 'none', sm: 'block' }, marginLeft: 3, marginRight: 3 }}
+        />
+
+        <Grid2>Payment : {splitNumber(payment)} $</Grid2>
       </Grid2>
     </>
   );
