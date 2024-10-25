@@ -33,7 +33,7 @@ function Coin(props: CoinProps) {
 
   return (
     <StyledCard elevation={3} onClick={onClickCard}>
-      <Grid2 container alignItems="center">
+      <Grid2 container alignItems="center" flexWrap="nowrap">
         <Avatar src={props.img} alt={props.title} sx={{ width: 35, height: 35 }} />
         <Avatar
           src={props.altImg}
