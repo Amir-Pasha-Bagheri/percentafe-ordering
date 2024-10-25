@@ -1,12 +1,14 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Avatar, Box, Container, LinearProgress, styled, Tab, Typography } from '@mui/material';
+import { Avatar, Box, styled, Tab } from '@mui/material';
 import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 'react';
 import { SwipeCallback, useSwipeable } from 'react-swipeable';
-import TabsFallback from './components/TabsFallback';
-import PendingProvider from './components/PendingProvider';
+import TabsFallback from 'shared-components/loading/TabsFallback';
+import PendingProvider from 'shared-components/pending-provider';
 import { useIRTSetCoins, useUSDTSetCoins } from 'config/store';
 import useSWR from 'swr';
 import fetcher from 'utils/fetcher';
+import ServerError from 'shared-components/error/ServerError';
+import FetchServer from 'shared-components/loading/FetchServer';
 
 const USDTcoins = lazy(() => import('./components/USDTcoins'));
 const IRTcoins = lazy(() => import('./components/IRTcoins'));
@@ -53,57 +55,49 @@ function Markets() {
     }
   }, [setIRTCoins, setUSDTCoins, data]);
 
-  if (isLoading)
-    return (
-      <>
-        <LinearProgress />
-        <Typography sx={{ textAlign: 'center', marginTop: 2 }}>Fetching...</Typography>
-      </>
-    );
+  if (isLoading) return <FetchServer />;
 
-  if (error) return <Typography>Something went wrong with server !</Typography>;
+  if (error) return <ServerError />;
 
   return (
-    <Container maxWidth="md">
-      <TabContext value={tab}>
-        <div {...swipeHandlers}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleChange} variant="fullWidth">
-              <Tab
-                label="USDT"
-                value="USDT"
-                iconPosition="end"
-                icon={
-                  <Avatar src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" />
-                }
-              />
-              <Tab
-                label="IRT"
-                value="IRT"
-                iconPosition="end"
-                icon={
-                  <Avatar src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg" />
-                }
-              />
-            </TabList>
-          </Box>
+    <TabContext value={tab}>
+      <div {...swipeHandlers}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} variant="fullWidth">
+            <Tab
+              label="USDT"
+              value="USDT"
+              iconPosition="end"
+              icon={
+                <Avatar src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" />
+              }
+            />
+            <Tab
+              label="IRT"
+              value="IRT"
+              iconPosition="end"
+              icon={
+                <Avatar src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg" />
+              }
+            />
+          </TabList>
+        </Box>
 
-          <Suspense fallback={<TabsFallback />}>
-            <StyledTabPanel value="USDT">
-              <PendingProvider isPending={isPending}>
-                <USDTcoins />
-              </PendingProvider>
-            </StyledTabPanel>
+        <Suspense fallback={<TabsFallback />}>
+          <StyledTabPanel value="USDT">
+            <PendingProvider isPending={isPending}>
+              <USDTcoins />
+            </PendingProvider>
+          </StyledTabPanel>
 
-            <StyledTabPanel value="IRT">
-              <PendingProvider isPending={isPending}>
-                <IRTcoins />
-              </PendingProvider>
-            </StyledTabPanel>
-          </Suspense>
-        </div>
-      </TabContext>
-    </Container>
+          <StyledTabPanel value="IRT">
+            <PendingProvider isPending={isPending}>
+              <IRTcoins />
+            </PendingProvider>
+          </StyledTabPanel>
+        </Suspense>
+      </div>
+    </TabContext>
   );
 }
 

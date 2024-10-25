@@ -31,7 +31,7 @@ function Layout() {
         </Toolbar>
       </AppBar>
 
-      <Container sx={{ marginTop: 3 }}>
+      <Container maxWidth="md" sx={{ marginTop: 3 }}>
         <Outlet />
       </Container>
     </>

@@ -30,6 +30,7 @@ function IRTcoins() {
           title={coin.title}
           img={coin.currency1.image}
           altImg={coin.currency2.image}
+          marketId={coin.id}
         />
       ))}
 

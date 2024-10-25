@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import TabsFallback from './TabsFallback';
+import TabsFallback from 'shared-components/loading/TabsFallback';
 
 interface PendingProviderProps {
   isPending: boolean;

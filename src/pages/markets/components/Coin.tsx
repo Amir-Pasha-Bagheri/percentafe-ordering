@@ -1,10 +1,12 @@
 import { Avatar, Card, Divider, Grid2, styled, Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 interface CoinProps {
   title: string;
   img: string;
   altImg: string;
+  marketId: string;
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -21,8 +23,14 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 function Coin(props: CoinProps) {
+  const navigate = useNavigate();
+
+  const onClickCard = () => {
+    navigate(`/markets/${props.marketId}`);
+  };
+
   return (
-    <StyledCard elevation={3}>
+    <StyledCard elevation={3} onClick={onClickCard}>
       <Grid2 container alignItems="center">
         <Avatar src={props.img} alt={props.title} sx={{ width: 35, height: 35 }} />
         <Avatar
